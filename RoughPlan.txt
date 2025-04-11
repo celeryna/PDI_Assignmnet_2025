@@ -1,0 +1,9 @@
+Commit Types:
+Type	Use for...
+    feat:       New features
+    fix:	    Bug fixes
+    docs:	    Changes to documentation
+    style:	    Code style (spacing, formatting, etc)
+    refactor:  	Refactoring (no behavior change)
+    test:       Adding or updating tests
+    chore:	    Maintenance (build scripts, configs)
