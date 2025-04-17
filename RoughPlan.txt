@@ -7,3 +7,88 @@ Type	Use for...
     refactor:  	Refactoring (no behavior change)
     test:       Adding or updating tests
     chore:	    Maintenance (build scripts, configs)
+
+CLASS MissionControl
+METHOD: main
+
+    Contains Menu for: 
+
+        =============================================
+        Welcome to Mission Command and Control
+        =============================================
+        Your options for this system are listed below
+        1> View all Missions
+        2> View all manned missions.
+        3> View all unmanned missions.
+        4> View a mission's astronauts.
+        5> Add a new mission.
+        6> Edit an existing mission.
+        7> Summary of missions' success rates (average, highest, lowest).
+        8> List astronauts for a given nationality.
+        9> Exit Mission Command and Control
+
+CLASS MissionManager
+METHOD readFile
+METHOD createMissionDatabase
+METHOD viewAllMissions
+METHOD filterMissions
+METHOD viewAstronautsByMission
+METHOD displayMissionDetails
+METHOD addMission
+METHOD editMission
+METHOD sumMissionSuccessRate
+METHOD viewAstronautsByNationality
+
+CLASS Mission
+METHODs for the contructors
+METHODs for the getters and setters for:
+
+    - getMissionName
+    - setMissionName
+
+    - getMissionCode
+    - setMissionCode
+
+    - getDestPlanet
+    - setDestPlanet
+
+    - getLaunchYear
+    - setLaunchYear
+
+    - getSuccessRate
+    - setSuccessRate
+
+    - isManned
+    - setManned
+
+    - getAstronauts
+    - setAstronauts
+
+
+CLASS Astronaut
+METHOD: Getters and setters for:
+
+// private fields for astronaut details:
+private String firstName;
+private String lastName;
+private String role;
+private int yearOfBirth;
+private String nationality;
+
+    - getFirstName
+    - setFirstName
+
+    - getLastName
+    - setLastName
+
+    - getRole
+    - setRole
+
+    - getYearOfBirth
+    - setYearOfBirth
+
+    - getNationality
+    - setNationality
+
+
+
