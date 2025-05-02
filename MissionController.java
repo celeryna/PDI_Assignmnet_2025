@@ -14,6 +14,11 @@ public class MissionController
     public String[][] missionsData; // A 2D array to store raw mission data from the CVS file      
     public Mission[] missions; // An array to store mission obects after processing the data from the CVS file
 
+    // NAME: readFile
+    // IMPORT: filename (String)
+    // EXPORT: none
+    // PURPOSE: Reads the contents of the CSV file into the missionsData array
+
     public void readFile(String filename)
     {
         FileInputStream fileStream = null;
@@ -70,26 +75,65 @@ public class MissionController
         }
     }
 
-    public void createMissions()
+    // NAME: createMissionDatabase
+    // IMPORT: none
+    // EXPORT: none
+    // PURPOSE: Converts the raw mission data into Mission and Astronaut objects
+    public void createMissionDatabase()
     {
-        String[] astronautsList = new String[5];
-
-        //initialise the mission array
         missions = new Mission[missionsData.length];
 
         for (int i = 0; i < missionsData.length; i++)
         {
-            if (missionsData[i][0] == null)
+            // Extract base mission data from the 2D array
+            String missionName = missionsData[i][0];
+            String missionCode = missionsData[i][1];
+            String destPlanet = missionsData[i][2];
+            int launchYear = Integer.parseInt(missionsData[i][3]);
+            double successRate = Double.parseDouble(missionsData[i][4]);
+            boolean manned = Boolean.parseBoolean(missionsData[i][5]);
+
+            Astronaut[] astronauts = null;
+
+            // Only parse astronaut data if the mission is manned and not empty
+            if (manned && !missionsData[i][6].isEmpty())
             {
-                continue; // So empty rows are skipped :))
+                String[] astronautEntries = missionsData[i][6].split("\\|");
+                astronauts = new Astronaut[astronautEntries.length];
+
+                for (int j = 0; j < astronautEntries.length; j++)
+                {
+                    String[] parts = astronautEntries[j].split(":");
+                    String[] nameParts = parts[0].split(" ");
+
+                    String firstName = nameParts[0];
+                    String lastName;
+
+                    // Check if the astronaut has both a first and last name
+                    if (nameParts.length > 1)
+                    {
+                        lastName = nameParts[1];
+                    }
+                    else
+                    {
+                        lastName = "";
+                    }
+
+                    String role = parts[1];
+                    int yearOfBirth = Integer.parseInt(parts[2]);
+                    String nationality = parts[3];
+
+                    astronauts[j] = new Astronaut(firstName, lastName, role, yearOfBirth, nationality);
+                }
             }
 
-             = missionsData[i][6].split(;);
-
-            // This will create a new Book object for each row of data...
-            Mission newMission = new Mission(missionsData[i][0], Integer.parseInt(booksData[i][13]), booksData[i][14], Boolean.parseBoolean(booksData[i][15]), Integer.parseInt(booksData[i][16]));
-            
+            // Create a Mission object and store it in the array
+            missions[i] = new Mission(missionName, missionCode, destPlanet, launchYear, successRate, manned, astronauts);
         }
+    }
+}
+
+
 
     // NAME: viewAllBooks
     // IMPORT: none
