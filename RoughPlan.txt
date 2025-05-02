@@ -28,6 +28,12 @@ METHOD: main
         9> Exit Mission Command and Control
 
 CLASS MissionManager
+/******************************************
+ * Author: Celerina Reyes                 *
+ * Created: 15/04/2025                    *
+ * Purpose: Central controller for        *
+ * mission data and file operations.      *
+ *****************************************/
 METHOD readFile
 METHOD createMissionDatabase
 METHOD viewAllMissions
@@ -92,3 +98,13 @@ private String nationality;
 
 
 
+Mission Name,Mission Code,Destination Planet,Launch Year,Success Rate,Manned Mission,Astronauts
+Lunar Outpost,LO100,Moon,2030,98.5,true,John Miller:Commander:45:USA|Alice Wong:Scientist:38:China
+
+missionsData[1][0]
+[Lunar Outpost][LO100][Moon][2030][98.5][true][John Miller:Commander:45:USA|Alice Wong:Scientist:38:China]
+
+astronautsList = missionsData[1][6].split("|") 
+([John Miller:Commander:45:USA], [Alice Wong:Scientist:38:China])
+
+astronautsList[0][0].split(":") = [John Miller][Commander][45][USA]
