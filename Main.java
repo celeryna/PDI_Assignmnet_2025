@@ -14,6 +14,7 @@ public class Main
         MissionController controller = new MissionController();
         controller.readFile("StartingDataFile_1.csv");
         controller.createMissionDatabase();
+        controller.viewAllMissions();
 
         int choice = 0;
       
@@ -21,8 +22,8 @@ public class Main
         do
         {
             System.out.println("\n=============================================");  
-            System.out.println(" Welcome to Mission Command and Control ");
-            System.out.println("=============================================");
+            System.out.println("     Welcome to Mission Command and Control    ");
+            System.out.println("===============================================");
             System.out.println("Your options for this system are listed below: ");
             System.out.println(" 1 > View all Missions");
             System.out.println(" 2 > View all manned missions");
@@ -33,25 +34,25 @@ public class Main
             System.out.println(" 7 > Summary of missions' success rates (average, highest, lowest)");
             System.out.println(" 8 > List astronauts for a given nationality");
             System.out.println(" 9 > Exit Mission Command and Control");
-            System.out.println("************************************");
+            System.out.println("===============================================");
             System.out.print("Your choice: ");
 
         
-            // Try-catch block to handle invalid inputs for the menu choices :)
+            // Try-catch block to handle invalid inputs for the menu choices
             try 
             {
                 choice = sc.nextInt();
                 sc.nextLine();
                 
-                // Switch-case for the different user choices :o
+                // Switch-case for the different user choices 
                 switch(choice)
                 {
                     case 1:
-                        // View ALL missions from the library :D
-                        System.out.println("\n=========================================");
-                        System.out.println("           All Missions");
-                        System.out.println("=========================================");
-                        manager.viewAllBooks();
+                        // View ALL missions from the library 
+                        System.out.println("\n=============================================");
+                        System.out.println("                All Missions");
+                        System.out.println("===============================================");
+                        controller.viewAllMissions();
                         break;
 
                     default:
@@ -65,9 +66,9 @@ public class Main
                 sc.next();  // Clear the invalid input :(
             }
         }
-        while (choice != 7); // Loop until the user chooses to leave (until 7 is input) :)
+        while (choice != 9); // Loop until the user chooses to leave (until 9 is input) 
 
-        sc.close(); // Bye-bye Scanner
+        sc.close(); 
     }
     }
 }

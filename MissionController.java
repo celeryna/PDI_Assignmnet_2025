@@ -91,24 +91,23 @@ public class MissionController
             String destPlanet = missionsData[i][2];
             int launchYear = Integer.parseInt(missionsData[i][3]);
             double successRate = Double.parseDouble(missionsData[i][4]);
-            boolean manned = Boolean.parseBoolean(missionsData[i][5]);
+            boolean ismanned = Boolean.parseBoolean(missionsData[i][5]);
 
-            Astronaut[] astronauts = null;
+            Astronaut[] astronauts = new Astronaut[5];
 
             // Only parse astronaut data if the mission is manned and not empty
-            if (manned && !missionsData[i][6].isEmpty())
+            if (ismanned && !missionsData[i][6].isEmpty())
             {
-                String[] astronautEntries = missionsData[i][6].split("\\|");
-                astronauts = new Astronaut[astronautEntries.length];
+                String[] astronautFields = missionsData[i][6].split("\\|");
+                astronauts = new Astronaut[astronautFields.length];
 
-                for (int j = 0; j < astronautEntries.length; j++)
+                for (int j = 0; j < astronautFields.length; j++)
                 {
-                    String[] parts = astronautEntries[j].split(":");
+                    String[] parts = astronautFields[j].split(":");
                     String[] nameParts = parts[0].split(" ");
 
                     String firstName = nameParts[0];
                     String lastName;
-
                     // Check if the astronaut has both a first and last name
                     if (nameParts.length > 1)
                     {
@@ -127,47 +126,55 @@ public class MissionController
                 }
             }
 
-            // Create a Mission object and store it in the array
-            missions[i] = new Mission(missionName, missionCode, destPlanet, launchYear, successRate, manned, astronauts);
+            // Create a mission object and store it in an array
+            missions[i] = new Mission(missionName, missionCode, destPlanet, launchYear, successRate, ismanned, astronauts);
+        }
+    }
+
+    // NAME: viewAllMissions
+    // IMPORT: none
+    // EXPORT: none
+    // PURPOSE: prints the details of ALL the missions from the system
+
+    public void viewAllMissions()
+    {
+        for (int i = 0; i < missions.length; i++)
+        {
+            if (missions[i] == null)
+            {
+                continue; // Null entries will be skipped
+            }
+
+            System.out.println("========================================");
+            System.out.println("Mission Name: " + missions[i].getMissionName());
+            System.out.println("Code: " + missions[i].getMissionCode());
+            System.out.println("Destination: " + missions[i].getDestPlanet());
+            System.out.println("Launch Year: " + missions[i].getLaunchYear());
+            System.out.println("Success Rate: " + missions[i].getSuccessRate() + "%");
+            System.out.println("Manned Mission: " + missions[i].isManned());
+
+            // Display astronauts if the mission is manned
+            if (missions[i].isManned() && missions[i].getAstronauts() != null)
+            {
+                System.out.println("Astronauts:");
+                Astronaut[] crew = missions[i].getAstronauts();
+
+                for (int j = 0; j < crew.length; j++)
+                {
+                    if (crew[j] != null)
+                    {
+                        System.out.println(" - " + crew[j].getFirstName() + " " + crew[j].getLastName()
+                                        + " (" + crew[j].getRole() + ", " + crew[j].getNationality()
+                                        + ", Born: " + crew[j].getYearOfBirth() + ")");
+                    }
+                }
+            }
+
+            System.out.println("========================================\n");
         }
     }
 }
 
 
 
-    // NAME: viewAllBooks
-    // IMPORT: none
-    // EXPORT: none
-    // PURPOSE: prints the details of ALL the books of the library :)
-//     public void viewAllBooks()
-//     {
-//         for (int i = 0; i < books.length; i++)
-//         {
-//             if (books[i] == null)
-//             {
-//                 continue; // NULL entries will be SKIPPED >:D
-//             }
-
-//             System.out.println();
-//             System.out.println("Title: " + books[i].getTitle());
-//             System.out.println("Author 1: " + books[i].getAuthors()[0].getFirstName() + " " + books[i].getAuthors()[0].getLastName() + " (" + books[i].getAuthors()[0].getNationality() + ", Born: " + books[i].getAuthors()[0].getYearOfBirth() + ")");
-
-//             // If theres more than 1 author, their details will also be printed
-//             if ((books[i].getAuthors().length > 1) && (books[i].getAuthors()[1] != null))
-//             {
-//                 System.out.println("Author 2: " + books[i].getAuthors()[1].getFirstName() + " " + books[i].getAuthors()[1].getLastName() + " (" + books[i].getAuthors()[1].getNationality() + ", Born: " + books[i].getAuthors()[1].getYearOfBirth() + ")");
-//             }
-
-//             if ((books[i].getAuthors().length > 2) && (books[i].getAuthors()[2] != null))
-//             {
-//                 System.out.println("Author 3: " + books[i].getAuthors()[2].getFirstName() + " " + books[i].getAuthors()[2].getLastName() + " (" + books[i].getAuthors()[2].getNationality() + ", Born: " + books[i].getAuthors()[2].getYearOfBirth() + ")");
-//             }
-
-//             System.out.println("Year: " + books[i].getYear());
-//             System.out.println("ISBN: " + books[i].getIsbn());
-//             System.out.println("eBook: " + books[i].isEbook());
-//             System.out.println("Edition: " + books[i].getEdition());
-//             System.out.println();
-//         }
-//     }
-// }
+   
