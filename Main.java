@@ -71,6 +71,24 @@ public class Main
                         controller.filterMissions(false);
                         break;
 
+                    case 4:
+                        // View a mission's astronauts
+                        System.out.println("\n========================================");
+                        System.out.println("          View Astronauts");
+                        System.out.println("========================================");
+                        System.out.print("Enter mission name or code: ");
+                        String input = sc.nextLine();
+                        controller.viewAstronautsByMission(input);
+                        break;
+
+                    case 5:
+                        // Add a mission
+                        System.out.println("\n========================================");
+                        System.out.println("          Add a Mission");
+                        System.out.println("========================================");
+                        controller.addMission();
+                        break;
+
                     default:
                         // To handle invalid menu choices (oopsies)
                         System.out.println("Invalid choice :( Try again.\n");

@@ -2,6 +2,8 @@ import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.InputMismatchException;
+import java.util.Scanner;
 
 /******************************************
  * Author: Celerina Reyes                 *
@@ -217,6 +219,277 @@ public class MissionController
             }
         }
     }
+
+    // NAME: viewAstronautsByMission
+    // IMPORT: missionIdentifier (String)
+    // EXPORT: found (boolean)
+    // PURPOSE: Displays astronauts for a specific mission, if it exists and is manned
+    public boolean viewAstronautsByMission(String missionIdentifier)
+    {
+        boolean found = false;
+
+        for (int i = 0; i < missions.length; i++)
+        {
+            if (missions[i] == null)
+            {
+                continue;
+            }
+
+            // Match by mission name OR mission code (case insensitive)
+            if (missions[i].getMissionName().equalsIgnoreCase(missionIdentifier)
+            || missions[i].getMissionCode().equalsIgnoreCase(missionIdentifier))
+            {
+                found = true;
+
+                System.out.println("========================================");
+                System.out.println("Mission: " + missions[i].getMissionName() + " (" + missions[i].getMissionCode() + ")");
+                System.out.println("Destination: " + missions[i].getDestPlanet());
+                System.out.println("Manned: " + missions[i].isManned());
+
+                if (missions[i].isManned() && missions[i].getAstronauts() != null)
+                {
+                    System.out.println("Astronauts:");
+                    Astronaut[] crew = missions[i].getAstronauts();
+
+                    for (int j = 0; j < crew.length; j++)
+                    {
+                        if (crew[j] != null)
+                        {
+                            System.out.println(" - " + crew[j].getFirstName() + " " + crew[j].getLastName()
+                                            + " (" + crew[j].getRole() + ", " + crew[j].getNationality()
+                                            + ", Born: " + crew[j].getYearOfBirth() + ")");
+                        }
+                    }
+                }
+                else
+                {
+                    System.out.println("This mission is unmanned.");
+                }
+
+                System.out.println("========================================\n");
+            }
+        }
+
+        if (!found)
+        {
+            System.out.println("No mission found with name or code: " + missionIdentifier);
+        }
+
+        return found;
+    }
+
+    // NAME: addMission
+    // IMPORT: none
+    // EXPORT: none
+    // PURPOSE: Adds a new mission to the missions array by collecting and validating user input
+    public void addMission()
+    {
+        Scanner sc = new Scanner(System.in);
+
+        String name = "", code = "", destination = "";
+
+        // Validate non-empty mission name
+        while (name.isEmpty())
+        {
+            System.out.print("Mission Name: ");
+            name = sc.nextLine();
+            if (name.isEmpty())
+            {
+                System.out.println("Mission name cannot be empty. Please try again.");
+            }
+        }
+
+        // Validate non-empty mission code
+        while (code.isEmpty())
+        {
+            System.out.print("Mission Code: ");
+            code = sc.nextLine();
+            if (code.isEmpty())
+            {
+                System.out.println("Mission code cannot be empty. Please try again.");
+            }
+        }
+
+        // Validate non-empty destination
+        while (destination.isEmpty())
+        {
+            System.out.print("Destination Planet: ");
+            destination = sc.nextLine();
+            if (destination.isEmpty())
+            {
+                System.out.println("Destination cannot be empty. Please try again.");
+            }
+        }
+
+        // Validate launch year (1900–2100)
+        int year = -1;
+        while (year < 1900 || year > 2100)
+        {
+            System.out.print("Launch Year (1900–2100): ");
+            try
+            {
+                year = sc.nextInt();
+                sc.nextLine();
+                if (year < 1900 || year > 2100)
+                {
+                    System.out.println("Invalid year. Please enter a number between 1900 and 2100.");
+                }
+            }
+            catch (InputMismatchException e)
+            {
+                System.out.println("Invalid input. Please enter a valid year.");
+                sc.nextLine();
+            }
+        }
+
+        // Validate success rate (0–100)
+        double successRate = -1;
+        while (successRate < 0 || successRate > 100)
+        {
+            System.out.print("Success Rate (0–100): ");
+            try
+            {
+                successRate = sc.nextDouble();
+                sc.nextLine();
+                if (successRate < 0 || successRate > 100)
+                {
+                    System.out.println("Invalid percentage. Please enter a number between 0 and 100.");
+                }
+            }
+            catch (InputMismatchException e)
+            {
+                System.out.println("Invalid input. Please enter a valid number.");
+                sc.nextLine();
+            }
+        }
+
+        // Ask if mission is manned (true/false)
+        boolean manned = false;
+        String input = "";
+        while (!input.equals("true") && !input.equals("false"))
+        {
+            System.out.print("Is this a manned mission? (true/false): ");
+            input = sc.nextLine().toLowerCase().trim();
+
+            if (!input.equals("true") && !input.equals("false"))
+            {
+                System.out.println("Invalid input. Please type 'true' or 'false'.");
+            }
+        }
+        manned = Boolean.parseBoolean(input);
+
+        Astronaut[] astronauts = null;
+
+        // If manned, collect astronaut details
+        if (manned)
+        {
+            int numAstronauts = 0;
+            while (numAstronauts < 1 || numAstronauts > 5)
+            {
+                System.out.print("How many astronauts? (1–5): ");
+                try
+                {
+                    numAstronauts = sc.nextInt();
+                    sc.nextLine();
+
+                    if (numAstronauts < 1 || numAstronauts > 5)
+                    {
+                        System.out.println("Invalid number. Please enter between 1 and 5.");
+                    }
+                }
+                catch (InputMismatchException e)
+                {
+                    System.out.println("Invalid input. Please enter a number.");
+                    sc.nextLine();
+                }
+            }
+
+            astronauts = new Astronaut[numAstronauts];
+
+            for (int i = 0; i < numAstronauts; i++)
+            {
+                System.out.println("\nAstronaut " + (i + 1));
+
+                String firstName = "";
+                while (firstName.isEmpty())
+                {
+                    System.out.print("First Name: ");
+                    firstName = sc.nextLine();
+                    if (firstName.isEmpty())
+                    {
+                        System.out.println("First name cannot be empty. Please try again.");
+                    }
+                }
+
+                String lastName = "";
+                while (lastName.isEmpty())
+                {
+                    System.out.print("Last Name: ");
+                    lastName = sc.nextLine();
+                    if (lastName.isEmpty())
+                    {
+                        System.out.println("Last name cannot be empty. Please try again.");
+                    }
+                }
+
+                System.out.print("Role: ");
+                String role = sc.nextLine();
+
+                int age = 0;
+                while (age <= 0)
+                {
+                    System.out.print("Age: ");
+                    try
+                    {
+                        age = sc.nextInt();
+                        sc.nextLine();
+                        if (age <= 0)
+                        {
+                            System.out.println("Age must be a positive number.");
+                        }
+                    }
+                    catch (InputMismatchException e)
+                    {
+                        System.out.println("Invalid input. Please enter a valid age.");
+                        sc.nextLine();
+                    }
+                }
+
+                String nationality = "";
+                while (nationality.isEmpty())
+                {
+                    System.out.print("Nationality: ");
+                    nationality = sc.nextLine();
+                    if (nationality.isEmpty())
+                    {
+                        System.out.println("Nationality cannot be empty. Please try again.");
+                    }
+                }
+
+                // Convert age to year of birth (you can adjust or store age directly if preferred)
+                int yearOfBirth = 2025 - age;
+
+                astronauts[i] = new Astronaut(firstName, lastName, role, yearOfBirth, nationality);
+            }
+        }
+
+        // Create the new Mission object
+        Mission newMission = new Mission(name, code, destination, year, successRate, manned, astronauts);
+
+        // Add it to a new array (dynamic resizing)
+        Mission[] newMissionArray = new Mission[missions.length + 1];
+        for (int i = 0; i < missions.length; i++)
+        {
+            newMissionArray[i] = missions[i];
+        }
+        newMissionArray[missions.length] = newMission;
+
+        missions = newMissionArray;
+
+        System.out.println("\nMission added successfully.");
+    }
+
+
 
 }
 
