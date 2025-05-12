@@ -173,6 +173,51 @@ public class MissionController
             System.out.println("========================================\n");
         }
     }
+
+    // NAME: filterMissions
+    // IMPORT: isManned (boolean)
+    // EXPORT: none
+    // PURPOSE: Displays only manned or unmanned missions based on the input
+    public void filterMissions(boolean isManned)
+    {
+        for (int i = 0; i < missions.length; i++)
+        {
+            if (missions[i] == null)
+            {
+                continue; // Skip empty entries
+            }
+
+            // Only display missions that match the requested type
+            if (missions[i].isManned() == isManned)
+            {
+                System.out.println("========================================");
+                System.out.println("Mission Name: " + missions[i].getMissionName());
+                System.out.println("Code: " + missions[i].getMissionCode());
+                System.out.println("Destination: " + missions[i].getDestPlanet());
+                System.out.println("Launch Year: " + missions[i].getLaunchYear());
+                System.out.println("Success Rate: " + missions[i].getSuccessRate() + "%");
+
+                if (isManned && missions[i].getAstronauts() != null)
+                {
+                    System.out.println("Astronauts:");
+                    Astronaut[] crew = missions[i].getAstronauts();
+
+                    for (int j = 0; j < crew.length; j++)
+                    {
+                        if (crew[j] != null)
+                        {
+                            System.out.println(" - " + crew[j].getFirstName() + " " + crew[j].getLastName()
+                                            + " (" + crew[j].getRole() + ", " + crew[j].getNationality()
+                                            + ", Born: " + crew[j].getYearOfBirth() + ")");
+                        }
+                    }
+                }
+
+                System.out.println("========================================\n");
+            }
+        }
+    }
+
 }
 
 

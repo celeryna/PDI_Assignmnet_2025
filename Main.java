@@ -12,7 +12,7 @@ public class Main
     {
         Scanner sc = new Scanner(System.in);
         MissionController controller = new MissionController();
-        controller.readFile("StartingDataFile_1.csv");
+        controller.readFile("data.csv");
         controller.createMissionDatabase();
         controller.viewAllMissions();
 
@@ -23,7 +23,7 @@ public class Main
         {
             System.out.println("\n=============================================");  
             System.out.println("     Welcome to Mission Command and Control    ");
-            System.out.println("===============================================");
+            System.out.println("=============================================");
             System.out.println("Your options for this system are listed below: ");
             System.out.println(" 1 > View all Missions");
             System.out.println(" 2 > View all manned missions");
@@ -34,7 +34,7 @@ public class Main
             System.out.println(" 7 > Summary of missions' success rates (average, highest, lowest)");
             System.out.println(" 8 > List astronauts for a given nationality");
             System.out.println(" 9 > Exit Mission Command and Control");
-            System.out.println("===============================================");
+            System.out.println("==============================================");
             System.out.print("Your choice: ");
 
         
@@ -49,10 +49,26 @@ public class Main
                 {
                     case 1:
                         // View ALL missions from the library 
-                        System.out.println("\n=============================================");
-                        System.out.println("                All Missions");
-                        System.out.println("===============================================");
+                        System.out.println("\n========================================");
+                        System.out.println("             All Missions");
+                        System.out.println("========================================");
                         controller.viewAllMissions();
+                        break;
+
+                    case 2:
+                        // View Manned Missions
+                        System.out.println("\n========================================");
+                        System.out.println("           Manned Missions");
+                        System.out.println("========================================");
+                        controller.filterMissions(true);
+                        break;
+
+                    case 3: 
+                        // View Unmanned Missions
+                        System.out.println("\n========================================");
+                        System.out.println("         Unmanned Missions");
+                        System.out.println("========================================");
+                        controller.filterMissions(false);
                         break;
 
                     default:
@@ -69,6 +85,5 @@ public class Main
         while (choice != 9); // Loop until the user chooses to leave (until 9 is input) 
 
         sc.close(); 
-    }
     }
 }
