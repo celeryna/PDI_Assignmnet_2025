@@ -592,12 +592,13 @@ public class MissionController
         }
     }
 
-    // NAME: sumMissionSuccessRate
+   // NAME: sumMissionSuccessRate
     // IMPORT: none
     // EXPORT: none
     // PURPOSE: Displays average, highest, and lowest mission success rates
     public void sumMissionSuccessRate()
     {
+        // If there are no missions, exit early
         if (missions.length == 0)
         {
             System.out.println("No missions available to summarise.");
@@ -611,23 +612,29 @@ public class MissionController
         Mission highestMission = null;
         Mission lowestMission = null;
 
+        // Loop through all missions
         for (int i = 0; i < missions.length; i++)
         {
             Mission m = missions[i];
+
+            // Skip null entries
             if (m == null)
             {
                 continue;
             }
 
+            // Add the mission's success rate to the total
             double rate = m.getSuccessRate();
             total += rate;
 
+            // Check for highest success rate so far
             if (rate > highest)
             {
                 highest = rate;
                 highestMission = m;
             }
 
+            // Check for lowest success rate so far
             if (rate < lowest)
             {
                 lowest = rate;
@@ -635,18 +642,74 @@ public class MissionController
             }
         }
 
+        // Calculate the average success rate
         double average = total / missions.length;
 
+        // Display average success rate (rounded to 2 decimal places)
         System.out.println("Average Success Rate: " + Math.round(average * 100.0) / 100.0 + "%");
 
+        // Display highest success rate and the mission it belongs to
         if (highestMission != null)
         {
             System.out.println("Highest Success Rate: " + highest + "% (" + highestMission.getMissionName() + ")");
         }
 
+        // Display lowest success rate and the mission it belongs to
         if (lowestMission != null)
         {
             System.out.println("Lowest Success Rate: " + lowest + "% (" + lowestMission.getMissionName() + ")");
+        }
+    }
+
+    // NAME: viewAstronautsByNationality
+    // IMPORT: nationality (String)
+    // EXPORT: none
+    // PURPOSE: Displays all astronauts with the given nationality
+    public void viewAstronautsByNationality(String nationality)
+    {
+        boolean found = false;
+
+        // Loop through all missions
+        for (int i = 0; i < missions.length; i++)
+        {
+            Mission m = missions[i];
+
+            // Skip empty or unmanned missions
+            if (m == null || !m.isManned() || m.getAstronauts() == null)
+            {
+                continue;
+            }
+
+            Astronaut[] crew = m.getAstronauts();
+
+            // Loop through the astronaut list of each mission
+            for (int j = 0; j < crew.length; j++)
+            {
+                Astronaut a = crew[j];
+
+                // If nationality matches (ignoring case), display astronaut info
+                if (a != null && a.getNationality().equalsIgnoreCase(nationality))
+                {
+                    if (!found)
+                    {
+                        System.out.println("\nAstronauts from " + nationality + ":");
+                        System.out.println("========================================");
+                        found = true;
+                    }
+
+                    System.out.println("Name: " + a.getFirstName() + " " + a.getLastName());
+                    System.out.println("Role: " + a.getRole());
+                    System.out.println("Age: " + (2025 - a.getYearOfBirth()));
+                    System.out.println("Mission: " + m.getMissionName());
+                    System.out.println();
+                }
+            }
+        }
+
+        // If no astronaut matched, print a message
+        if (!found)
+        {
+            System.out.println("No astronauts found with nationality: " + nationality);
         }
     }
 }

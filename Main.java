@@ -176,6 +176,16 @@ public class Main
                         controller.sumMissionSuccessRate();
                         System.out.println("========================================\n");
                         break;
+                    
+                    case 8:
+                        System.out.println("\n========================================");
+                        System.out.println("        Astronauts by Nationality       ");
+                        System.out.println("========================================");
+                        System.out.print("Enter nationality to search: ");
+                        String nationality = sc.nextLine();
+                        controller.viewAstronautsByNationality(nationality);
+                        break;
+                    
 
                     default:
                         // To handle invalid menu choices (oopsies)
