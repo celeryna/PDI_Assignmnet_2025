@@ -489,6 +489,108 @@ public class MissionController
         System.out.println("\nMission added successfully.");
     }
 
+    // NAME: editMission
+    // IMPORT: missionIndex (int), field (int), value (String)
+    // EXPORT: none
+    // PURPOSE: Edits a selected field of a mission with full validation and clean structure
+    public void editMission(int missionIndex, int field, String value)
+    {
+        Mission mission = missions[missionIndex];
+
+        switch (field)
+        {
+            case 1:
+                if (!value.isEmpty())
+                {
+                    mission.setMissionName(value);
+                }
+                else
+                {
+                    System.out.println("Mission name cannot be empty.");
+                }
+                break;
+
+            case 2:
+                if (!value.isEmpty())
+                {
+                    mission.setMissionCode(value);
+                }
+                else
+                {
+                    System.out.println("Mission code cannot be empty.");
+                }
+                break;
+
+            case 3:
+                if (!value.isEmpty())
+                {
+                    mission.setDestPlanet(value);
+                }
+                else
+                {
+                    System.out.println("Destination cannot be empty.");
+                }
+                break;
+
+            case 4:
+                try
+                {
+                    int year = Integer.parseInt(value);
+                    if (year >= 1900 && year <= 2100)
+                    {
+                        mission.setLaunchYear(year);
+                    }
+                    else
+                    {
+                        System.out.println("Launch year must be between 1900 and 2100.");
+                    }
+                }
+                catch (NumberFormatException e)
+                {
+                    System.out.println("Invalid input. Please enter a valid year.");
+                }
+                break;
+
+            case 5:
+                try
+                {
+                    double rate = Double.parseDouble(value);
+                    if (rate >= 0 && rate <= 100)
+                    {
+                        mission.setSuccessRate(rate);
+                    }
+                    else
+                    {
+                        System.out.println("Success rate must be between 0 and 100.");
+                    }
+                }
+                catch (NumberFormatException e)
+                {
+                    System.out.println("Invalid input. Please enter a valid number.");
+                }
+                break;
+
+            case 6:
+                if (value.equals("true") || value.equals("false"))
+                {
+                    boolean isManned = Boolean.parseBoolean(value);
+                    mission.setManned(isManned);
+
+                    if (!isManned)
+                    {
+                        mission.setAstronauts(null); // Clear astronauts if unmanned
+                    }
+                }
+                else
+                {
+                    System.out.println("Invalid input. Please enter 'true' or 'false'.");
+                }
+                break;
+
+            default:
+                System.out.println("Invalid field number. Please try again.");
+        }
+    }
 
 
 }

@@ -89,6 +89,86 @@ public class Main
                         controller.addMission();
                         break;
 
+                    case 6:
+                        // EDIT an existing mission
+                        System.out.println("\n************************************");  
+                        System.out.println("            Edit Missions");
+                        System.out.println("************************************");
+                    
+                        // List ALL missions with a number for selection
+                        for (int i = 0; i < controller.missions.length; i++)
+                        {
+                            if (controller.missions[i] != null)
+                            {
+                                int missionNum = i + 1;
+                                System.out.println("[" + missionNum + "] " + controller.missions[i].getMissionName());
+                            }
+                        }
+                    
+                        int missionChoice = -1;
+                    
+                        // ✅ Loop until valid mission number is selected
+                        while (missionChoice < 0 || missionChoice >= controller.missions.length)
+                        {
+                            System.out.print("\nSelect a mission to edit by the number\nChoice: ");
+                            try
+                            {
+                                missionChoice = sc.nextInt();
+                                sc.nextLine();
+                                missionChoice -= 1; // adjust for 0-based indexing
+                    
+                                if (missionChoice < 0 || missionChoice >= controller.missions.length)
+                                {
+                                    System.out.println("Invalid mission number. Please try again.");
+                                }
+                            }
+                            catch (InputMismatchException e)
+                            {
+                                System.out.println("Invalid input. Please enter a number.");
+                                sc.nextLine(); // clear bad input
+                            }
+                        }
+                    
+                        // Now ask which field to edit
+                        System.out.println("\nWhat value would you like to change from that mission?\n");
+                        System.out.println("[1] Mission Name: " + controller.missions[missionChoice].getMissionName());
+                        System.out.println("[2] Mission Code: " + controller.missions[missionChoice].getMissionCode());
+                        System.out.println("[3] Destination: " + controller.missions[missionChoice].getDestPlanet());
+                        System.out.println("[4] Launch Year: " + controller.missions[missionChoice].getLaunchYear());
+                        System.out.println("[5] Success Rate: " + controller.missions[missionChoice].getSuccessRate());
+                        System.out.println("[6] Manned: " + controller.missions[missionChoice].isManned());
+                    
+                        int detailChoice = -1;
+                    
+                        // ✅ Loop until valid field number is chosen
+                        while (detailChoice < 1 || detailChoice > 6)
+                        {
+                            System.out.print("\nSelect a value to edit by the number\nChoice: ");
+                            try
+                            {
+                                detailChoice = sc.nextInt();
+                                sc.nextLine();
+                                if (detailChoice < 1 || detailChoice > 6)
+                                {
+                                    System.out.println("Invalid field number. Please try again.");
+                                }
+                            }
+                            catch (InputMismatchException e)
+                            {
+                                System.out.println("Invalid input. Please enter a number.");
+                                sc.nextLine();
+                            }
+                        }
+                    
+                        // Ask for new value
+                        System.out.print("New value: ");
+                        String detailValue = sc.nextLine();
+                    
+                        // Call the edit method
+                        controller.editMission(missionChoice, detailChoice, detailValue);
+                        System.out.println("\nMission edited successfully!");
+                        break;                    
+
                     default:
                         // To handle invalid menu choices (oopsies)
                         System.out.println("Invalid choice :( Try again.\n");
