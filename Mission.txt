@@ -1,0 +1,96 @@
+BEGIN Mission
+
+    // These are the private fields to store mission details
+    missionName = ""
+    missionCode = ""
+    destPlanet = ""
+    launchYear = 0
+    successRate = 0.0
+    isManned = FALSE
+    astronauts = NULL
+
+    // NAME: Mission
+    // IMPORT: none
+    // EXPORT: none
+    // PURPOSE: default constructor with basic values
+    METHOD
+        missionName = "None"
+        missionCode = "None"
+        destPlanet = "None"
+        launchYear = 0
+        successRate = 0.0
+        isManned = FALSE
+        astronauts = NULL
+    END METHOD
+
+    // NAME: Mission
+    // IMPORT: all mission values including astronaut array
+    // EXPORT: none
+    // PURPOSE: full constructor to build a Mission object from CSV or user input
+    METHOD(missionName, missionCode, destPlanet, launchYear, successRate, isManned, astronauts)
+        this.missionName = missionName
+        this.missionCode = missionCode
+        this.destPlanet = destPlanet
+        this.launchYear = launchYear
+        this.successRate = successRate
+        this.isManned = isManned
+        this.astronauts = astronauts
+    END METHOD
+
+    // Getter and Setter for the mission name
+    METHOD
+        RETURN missionName
+    END METHOD
+    METHOD setMissionName(missionName)
+        this.missionName = missionName
+    END METHOD
+
+    // Getter and Setter for the mission code
+    METHOD
+        RETURN missionCode
+    END METHOD
+    METHOD setMissionCode(missionCode)
+        this.missionCode = missionCode
+    END METHOD
+
+    // Getter and Setter for the destination planet
+    METHOD
+        RETURN destPlanet
+    END METHOD
+    METHOD setDestPlanet(destPlanet)
+        this.destPlanet = destPlanet
+    END METHOD
+
+    // Getter and Setter for the launch year
+    METHOD
+        RETURN launchYear
+    END METHOD
+    METHOD setLaunchYear(launchYear)
+        this.launchYear = launchYear
+    END METHOD
+
+    // Getter and Setter for the success rate
+    METHOD
+        RETURN successRate
+    END METHOD
+    METHOD setSuccessRate(successRate)
+        this.successRate = successRate
+    END METHOD
+
+    // Getter and Setter for the manned status
+    METHOD
+        RETURN isManned
+    END METHOD
+    METHOD setManned(isManned)
+        this.isManned = isManned
+    END METHOD
+
+    // Getter and Setter for the astronauts array
+    METHOD
+        RETURN astronauts
+    END METHOD
+    METHOD setAstronauts(astronauts)
+        this.astronauts = astronauts
+    END METHOD
+
+END

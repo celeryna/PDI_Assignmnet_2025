@@ -1,0 +1,74 @@
+BEGIN Astronaut
+
+    // These are the private fields to store astronaut details
+    firstName = ""
+    lastName = ""
+    role = ""
+    yearOfBirth = 0
+    nationality = ""
+
+    // NAME: Astronaut
+    // IMPORT: none
+    // EXPORT: none
+    // PURPOSE: constructor to initialise the astronaut with default values
+    METHOD
+        firstName = "None"
+        lastName = "None"
+        role = "None"
+        yearOfBirth = 0
+        nationality = "None"
+    END METHOD
+
+    // NAME: Astronaut
+    // IMPORT: firstName (String), lastName (String), role (String), yearOfBirth (int), nationality (String)
+    // EXPORT: none
+    // PURPOSE: this constructor sets all fields for the astronaut
+    METHOD (firstName, lastName, role, yearOfBirth, nationality)
+        this.firstName = firstName
+        this.lastName = lastName
+        this.role = role
+        this.yearOfBirth = yearOfBirth
+        this.nationality = nationality
+    END METHOD
+
+    // Getter and Setter for the first name
+    METHOD
+        RETURN firstName
+    END METHOD
+    METHOD setFirstName(firstName)
+        this.firstName = firstName
+    END METHOD
+
+    // Getter and Setter for the last name
+    METHOD
+        RETURN lastName
+    END METHOD
+    METHOD setLastName(lastName)
+        this.lastName = lastName
+    END METHOD
+
+    // Getter and Setter for the role
+    METHOD
+        RETURN role
+    END METHOD
+    METHOD setRole(role)
+        this.role = role
+    END METHOD
+
+    // Getter and Setter for the year of birth
+    METHOD
+        RETURN yearOfBirth
+    END METHOD
+    METHOD setYearOfBirth(yearOfBirth)
+        this.yearOfBirth = yearOfBirth
+    END METHOD
+
+    // Getter and Setter for the nationality
+    METHOD
+        RETURN nationality
+    END METHOD
+    METHOD setNationality(nationality)
+        this.nationality = nationality
+    END METHOD
+
+END

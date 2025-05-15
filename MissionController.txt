@@ -1,0 +1,290 @@
+BEGIN MissionController
+
+    // ATTRIBUTES
+    missionsData (String[][]) = 2D array to store raw CSV values
+    missions (Mission[]) = array of Mission objects built from missionsData
+
+    // NAME: readFile
+    // IMPORT: filename (String)
+    // EXPORT: none
+    // PURPOSE: Reads the contents of the CSV file into the missionsData array
+    METHOD readFile(filename)
+        DECLARE fileStream (FileInputStream)
+        DECLARE isr (InputStreamReader)
+        DECLARE bufRdr (BufferedReader)
+        DECLARE line (String)
+        DECLARE rows (INTEGER) = 0
+
+        TRY
+            OPEN filename as input file
+            COUNT number of lines → rows
+
+            CLOSE file
+
+            REOPEN file
+            READ first line (header)
+            SPLIT header by "," into headers array
+            DECLARE columns = headers.length
+
+            CREATE missionsData[rows - 1][columns]
+
+            DECLARE i = 0
+            FOR EACH line in file AFTER header
+                SPLIT line by "," using split(",", -1)
+                FOR j FROM 0 TO columns - 1
+                    SET missionsData[i][j] = value at column j
+                END FOR
+                INCREMENT i
+            END FOR
+
+            CLOSE file
+
+        CATCH IOException
+            PRINT error message
+            CLOSE file IF open
+
+    END METHOD
+
+    // NAME: createMissionDatabase
+    // IMPORT: none
+    // EXPORT: none
+    // PURPOSE: Converts the raw mission data into Mission and Astronaut objects
+    METHOD createMissionDatabase()
+        CREATE missions array of size missionsData.length
+
+        FOR i FROM 0 TO missionsData.length - 1
+            EXTRACT missionName, missionCode, destPlanet, launchYear, successRate, isManned FROM missionsData[i]
+
+            IF isManned IS TRUE AND astronaut field IS NOT empty THEN
+                SPLIT astronauts field by "|"
+                CREATE astronauts array of that size
+
+                FOR j FROM 0 TO size of astronaut list - 1
+                    SPLIT astronaut string by ":"
+                    EXTRACT full name, role, age, nationality
+                    SPLIT full name INTO firstName AND lastName
+                    CALCULATE yearOfBirth AS 2025 MINUS age
+                    CREATE Astronaut object AND STORE in astronauts[j]
+                END FOR
+
+            ELSE
+                SET astronauts TO NULL
+            END IF
+
+            CREATE new Mission object with all values
+            STORE in missions[i]
+        END FOR
+    END METHOD
+
+    // NAME: viewAllMissions
+    // IMPORT: none
+    // EXPORT: none
+    // PURPOSE: Prints the details of all missions in the system
+    METHOD viewAllMissions()
+        FOR EACH mission IN missions
+            IF mission IS NULL THEN CONTINUE
+
+            PRINT mission details
+
+            IF mission IS manned AND has astronauts THEN
+                FOR EACH astronaut IN mission
+                    IF astronaut IS NOT NULL THEN
+                        PRINT astronaut details
+                    END IF
+                END FOR
+            END IF
+        END FOR
+    END METHOD
+
+    // NAME: filterMissions
+    // IMPORT: isManned (BOOLEAN)
+    // EXPORT: none
+    // PURPOSE: Displays only manned or unmanned missions
+    METHOD filterMissions(isManned)
+        FOR EACH mission IN missions
+            IF mission IS NULL THEN CONTINUE
+
+            IF mission.isManned IS EQUAL TO isManned THEN
+                PRINT mission details
+
+                IF isManned IS TRUE THEN
+                    FOR EACH astronaut IN mission
+                        PRINT astronaut details
+                    END FOR
+                END IF
+            END IF
+        END FOR
+    END METHOD
+
+    // NAME: viewAstronautsByMission
+    // IMPORT: missionIdentifier (String)
+    // EXPORT: found (BOOLEAN)
+    // PURPOSE: Displays astronauts for a specific mission
+    METHOD viewAstronautsByMission(missionIdentifier)
+        SET found TO FALSE
+
+        FOR EACH mission IN missions
+            IF mission IS NULL THEN CONTINUE
+
+            IF mission name OR code IS EQUAL TO missionIdentifier THEN
+                SET found TO TRUE
+                PRINT mission details
+
+                IF mission IS manned THEN
+                    PRINT astronaut details
+                ELSE
+                    PRINT "This mission is unmanned."
+                END IF
+            END IF
+        END FOR
+
+        IF found IS FALSE THEN
+            PRINT "No mission found."
+
+        RETURN found
+    END METHOD
+
+    // NAME: addMission
+    // IMPORT: none
+    // EXPORT: none
+    // PURPOSE: Collects input and adds a validated mission to the list
+    METHOD addMission()
+        PROMPT for missionName, missionCode, destination UNTIL each IS NOT empty
+        PROMPT for launchYear UNTIL year IS BETWEEN 1900 AND 2100
+        PROMPT for successRate UNTIL rate IS BETWEEN 0 AND 100
+        PROMPT for manned status UNTIL input IS "true" OR "false"
+        CONVERT to BOOLEAN manned
+
+        IF manned IS TRUE THEN
+            PROMPT for number of astronauts UNTIL value IS BETWEEN 1 AND 5
+            CREATE astronauts array
+
+            FOR EACH astronaut TO be added
+                PROMPT for firstName, lastName UNTIL each IS NOT empty
+                PROMPT for role
+                PROMPT for age UNTIL age IS GREATER THAN 0
+                PROMPT for nationality UNTIL NOT empty
+                CALCULATE yearOfBirth AS 2025 MINUS age
+                CREATE Astronaut AND ADD to list
+            END FOR
+        ELSE
+            SET astronauts TO NULL
+        END IF
+
+        CREATE new Mission object
+        EXPAND missions array by 1
+        COPY all missions to new array
+        ADD new mission to end
+        SET missions = new array
+
+        PRINT "Mission added successfully."
+
+    END METHOD
+
+    // NAME: editMission
+    // IMPORT: missionIndex (int), field (int), value (String)
+    // EXPORT: none
+    // PURPOSE: Edits a selected mission field
+    METHOD editMission(missionIndex, field, value)
+        SELECT mission FROM missions[missionIndex]
+
+        SWITCH field
+            CASE 1:
+                IF value IS NOT empty THEN SET mission name
+            CASE 2:
+                IF value IS NOT empty THEN SET mission code
+            CASE 3:
+                IF value IS NOT empty THEN SET destination
+            CASE 4:
+                PARSE value TO INTEGER
+                IF year IS BETWEEN 1900 AND 2100 THEN SET launch year
+            CASE 5:
+                PARSE value TO DOUBLE
+                IF value IS BETWEEN 0 AND 100 THEN SET success rate
+            CASE 6:
+                IF value IS "true" OR "false" THEN
+                    SET isManned
+                    IF isManned IS FALSE THEN SET astronauts TO NULL
+        END SWITCH
+    END METHOD
+
+    // NAME: sumMissionSuccessRate
+    // IMPORT: none
+    // EXPORT: none
+    // PURPOSE: Calculates and prints average, highest, and lowest success rate
+    METHOD sumMissionSuccessRate()
+        IF missions.length IS 0 THEN PRINT and RETURN
+
+        SET total = 0, highest = -1, lowest = 101
+        SET highestMission = NULL, lowestMission = NULL
+
+        FOR EACH mission
+            IF mission IS NULL THEN CONTINUE
+
+            ADD successRate to total
+            IF rate IS GREATER THAN highest THEN UPDATE highest and mission
+            IF rate IS LESS THAN lowest THEN UPDATE lowest and mission
+        END FOR
+
+        CALCULATE average = total DIVIDED BY number of missions
+
+        PRINT average, highest, and lowest values WITH mission names
+
+    END METHOD
+
+    // NAME: viewAstronautsByNationality
+    // IMPORT: nationality (String)
+    // EXPORT: none
+    // PURPOSE: Displays astronauts matching a given nationality
+    METHOD viewAstronautsByNationality(nationality)
+        SET found TO FALSE
+
+        FOR EACH mission
+            IF mission IS NULL OR mission IS NOT manned THEN CONTINUE
+
+            FOR EACH astronaut IN mission
+                IF astronaut IS NOT NULL AND astronaut nationality MATCHES input
+                    IF found IS FALSE THEN PRINT header
+                    PRINT astronaut name, role, age, mission
+                    SET found TO TRUE
+        END FOR
+
+        IF found IS FALSE THEN
+            PRINT "No astronauts found"
+
+    END METHOD
+
+    // NAME: writeFile
+    // IMPORT: filename (String)
+    // EXPORT: none
+    // PURPOSE: Writes mission data to a CSV file
+    METHOD writeFile(filename)
+        TRY TO OPEN file for writing
+
+        WRITE CSV header
+
+        FOR EACH mission
+            IF mission IS NULL THEN CONTINUE
+
+            WRITE mission fields
+
+            IF mission IS manned THEN
+                FOR EACH astronaut
+                    IF astronaut IS NOT NULL THEN
+                        FORMAT astronaut AS "First Last:Role:Age:Nationality"
+                        SEPARATE entries with "|"
+                END FOR
+            END IF
+
+            WRITE full line
+        END FOR
+
+        CLOSE file
+        PRINT success message
+
+        CATCH IOException THEN
+            PRINT error message
+
+    END METHOD
+
+END

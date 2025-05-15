@@ -1,4 +1,8 @@
-Functionality Checklist
+Celerina Reyes
+25/04/2025
+
+Functionality Checklist:
+
 1. Reading and saving
     - Loads mission data from data.csv when the program starts
     - Writes updated data back to data.csv only if something was changed

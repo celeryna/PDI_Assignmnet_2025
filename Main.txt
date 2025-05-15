@@ -1,0 +1,190 @@
+BEGIN Main
+    MAIN
+
+        // Declare scanner and create controller
+        DECLARE sc (Scanner)
+        DECLARE controller (MissionController)
+        SET controller TO NEW MissionController
+
+        // Load mission data from CSV
+        CALL controller.readFile("data.csv")
+        CALL controller.createMissionDatabase()
+        CALL controller.viewAllMissions()
+
+        // A loop for the main menu. It runs until the user chooses to exit
+        DECLARE choice (INTEGER) = 0
+
+        DO
+            // Display menu options
+            PRINT "============================================="
+            PRINT " Welcome to Mission Command and Control"
+            PRINT "============================================="
+            PRINT "Your options for this system are listed below:"
+            PRINT " 1 > View all Missions"
+            PRINT " 2 > View all manned missions"
+            PRINT " 3 > View all unmanned missions"
+            PRINT " 4 > View a mission's astronauts"
+            PRINT " 5 > Add a new mission"
+            PRINT " 6 > Edit an existing mission"
+            PRINT " 7 > Summary of missions' success rates (average, highest, lowest)"
+            PRINT " 8 > List astronauts for a given nationality"
+            PRINT " 9 > Save changes and exit Mission Command and Control"
+            PRINT "============================================="
+            PRINT "Your choice: "
+
+            TRY
+                SET choice TO INPUT (INTEGER)
+                CLEAR input buffer
+
+                SWITCH choice
+
+                    CASE 1:
+                        // View all missions
+                        PRINT "========================================"
+                        PRINT "             All Missions"
+                        PRINT "========================================"
+                        CALL controller.viewAllMissions()
+                        BREAK
+
+                    CASE 2:
+                        // View manned missions
+                        PRINT "========================================"
+                        PRINT "           Manned Missions"
+                        PRINT "========================================"
+                        CALL controller.filterMissions(TRUE)
+                        BREAK
+
+                    CASE 3:
+                        // View unmanned missions
+                        PRINT "========================================"
+                        PRINT "         Unmanned Missions"
+                        PRINT "========================================"
+                        CALL controller.filterMissions(FALSE)
+                        BREAK
+
+                    CASE 4:
+                        // View a mission's astronauts
+                        PRINT "========================================"
+                        PRINT "          View Astronauts"
+                        PRINT "========================================"
+                        PRINT "Enter mission name or code: "
+                        DECLARE input (STRING) = INPUT
+                        CALL controller.viewAstronautsByMission(input)
+                        BREAK
+
+                    CASE 5:
+                        // Add a new mission
+                        PRINT "========================================"
+                        PRINT "            Add a Mission"
+                        PRINT "========================================"
+                        CALL controller.addMission()
+                        BREAK
+
+                    CASE 6:
+                        // Edit an existing mission
+                        PRINT "========================================"
+                        PRINT "            Edit Missions"
+                        PRINT "========================================"
+
+                        // Display missions with index numbers
+                        FOR i FROM 0 TO controller.missions.length - 1
+                            IF controller.missions[i] IS NOT NULL THEN
+                                PRINT "[" + (i + 1) + "] " + controller.missions[i].getMissionName()
+                            END IF
+                        END FOR
+
+                        DECLARE missionChoice (INTEGER) = -1
+
+                        // Ask for valid mission number
+                        WHILE missionChoice IS LESS THAN 0 OR missionChoice IS GREATER THAN OR EQUAL TO controller.missions.length
+                            TRY
+                                PRINT "Select a mission to edit by the number"
+                                SET missionChoice TO INPUT (INTEGER)
+                                CLEAR input buffer
+                                SET missionChoice TO missionChoice - 1
+
+                                IF missionChoice IS LESS THAN 0 OR missionChoice IS GREATER THAN OR EQUAL TO controller.missions.length THEN
+                                    PRINT "Invalid mission number. Please try again."
+                                END IF
+
+                            CATCH InputMismatchException
+                                PRINT "Invalid input. Please enter a number."
+                                CLEAR input buffer
+                        END WHILE
+
+                        // Ask which field to edit
+                        PRINT "What value would you like to change from that mission?"
+                        PRINT "[1] Mission Name: " + controller.missions[missionChoice].getMissionName()
+                        PRINT "[2] Mission Code: " + controller.missions[missionChoice].getMissionCode()
+                        PRINT "[3] Destination: " + controller.missions[missionChoice].getDestPlanet()
+                        PRINT "[4] Launch Year: " + controller.missions[missionChoice].getLaunchYear()
+                        PRINT "[5] Success Rate: " + controller.missions[missionChoice].getSuccessRate()
+                        PRINT "[6] Manned: " + controller.missions[missionChoice].isManned()
+
+                        DECLARE detailChoice (INTEGER) = -1
+
+                        // Ask for valid field number
+                        WHILE detailChoice IS LESS THAN 1 OR detailChoice IS GREATER THAN 6
+                            TRY
+                                PRINT "Select a value to edit by the number"
+                                SET detailChoice TO INPUT (INTEGER)
+                                CLEAR input buffer
+
+                                IF detailChoice IS LESS THAN 1 OR detailChoice IS GREATER THAN 6 THEN
+                                    PRINT "Invalid field number. Please try again."
+                                END IF
+
+                            CATCH InputMismatchException
+                                PRINT "Invalid input. Please enter a number."
+                                CLEAR input buffer
+                        END WHILE
+
+                        // Ask for new value
+                        PRINT "New value: "
+                        DECLARE detailValue (STRING) = INPUT
+
+                        // Edit the mission
+                        CALL controller.editMission(missionChoice, detailChoice, detailValue)
+                        PRINT "Mission edited successfully!"
+                        BREAK
+
+                    CASE 7:
+                        // View success rate summary
+                        PRINT "========================================"
+                        PRINT "          Mission Success Rates"
+                        PRINT "========================================"
+                        CALL controller.sumMissionSuccessRate()
+                        PRINT "========================================"
+                        BREAK
+
+                    CASE 8:
+                        // View astronauts by nationality
+                        PRINT "========================================"
+                        PRINT "        Astronauts by Nationality"
+                        PRINT "========================================"
+                        PRINT "Enter nationality to search: "
+                        DECLARE nationality (STRING) = INPUT
+                        CALL controller.viewAstronautsByNationality(nationality)
+                        BREAK
+
+                    CASE 9:
+                        // Save and exit
+                        CALL controller.writeFile("data.csv")
+                        PRINT "Exiting Mission Command and Control..."
+                        BREAK
+
+                    DEFAULT:
+                        // Handle invalid menu choice
+                        PRINT "Invalid choice. Please try again."
+                END SWITCH
+
+            CATCH InputMismatchException
+                PRINT "Invalid input. Please enter a number."
+                CLEAR input buffer
+
+        WHILE choice IS NOT EQUAL TO 9
+
+        CALL sc.close()
+
+    END MAIN
+END

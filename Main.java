@@ -1,6 +1,6 @@
 /************************************
  * Author: Celerina Reyes           *
- * Created: 07/10/2024              *
+ * Created: 16/04/2025              *
  * Purpose: Contains Main Menu      *
  ************************************/
 
@@ -107,7 +107,7 @@ public class Main
                     
                         int missionChoice = -1;
                     
-                        // ✅ Loop until valid mission number is selected
+                        // Loop until valid mission number is selected
                         while (missionChoice < 0 || missionChoice >= controller.missions.length)
                         {
                             System.out.print("\nSelect a mission to edit by the number\nChoice: ");
@@ -200,7 +200,7 @@ public class Main
             catch (InputMismatchException e) 
             {
                 System.out.println("Invalid choice :( Please enter a number.");
-                sc.next();  // Clear the invalid input :(
+                sc.next();  // Clear the invalid input 
             }
         }
         while (choice != 9); // Loop until the user chooses to leave (until 9 is input) 
