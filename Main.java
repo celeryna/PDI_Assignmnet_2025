@@ -18,7 +18,7 @@ public class Main
 
         int choice = 0;
       
-        // A loop for the main library menu. It will keep running until the user chooses to exit :)
+        // A loop for the main library menu. It will keep running until the user chooses to exit 
         do
         {
             System.out.println("\n=============================================");  
@@ -84,16 +84,16 @@ public class Main
                     case 5:
                         // Add a mission
                         System.out.println("\n========================================");
-                        System.out.println("          Add a Mission");
+                        System.out.println("            Add a Mission");
                         System.out.println("========================================");
                         controller.addMission();
                         break;
 
                     case 6:
                         // EDIT an existing mission
-                        System.out.println("\n************************************");  
+                        System.out.println("\n========================================");  
                         System.out.println("            Edit Missions");
-                        System.out.println("************************************");
+                        System.out.println("========================================");
                     
                         // List ALL missions with a number for selection
                         for (int i = 0; i < controller.missions.length; i++)
@@ -140,7 +140,7 @@ public class Main
                     
                         int detailChoice = -1;
                     
-                        // ✅ Loop until valid field number is chosen
+                        // Loop until valid field number is chosen
                         while (detailChoice < 1 || detailChoice > 6)
                         {
                             System.out.print("\nSelect a value to edit by the number\nChoice: ");
@@ -167,7 +167,15 @@ public class Main
                         // Call the edit method
                         controller.editMission(missionChoice, detailChoice, detailValue);
                         System.out.println("\nMission edited successfully!");
-                        break;                    
+                        break;       
+                        
+                    case 7:
+                        System.out.println("\n========================================");
+                        System.out.println("          Mission Success Rates       ");
+                        System.out.println("========================================");
+                        controller.sumMissionSuccessRate();
+                        System.out.println("========================================\n");
+                        break;
 
                     default:
                         // To handle invalid menu choices (oopsies)

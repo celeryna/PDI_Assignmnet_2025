@@ -592,7 +592,63 @@ public class MissionController
         }
     }
 
+    // NAME: sumMissionSuccessRate
+    // IMPORT: none
+    // EXPORT: none
+    // PURPOSE: Displays average, highest, and lowest mission success rates
+    public void sumMissionSuccessRate()
+    {
+        if (missions.length == 0)
+        {
+            System.out.println("No missions available to summarise.");
+            return;
+        }
 
+        double total = 0;
+        double highest = -1;
+        double lowest = 101;
+
+        Mission highestMission = null;
+        Mission lowestMission = null;
+
+        for (int i = 0; i < missions.length; i++)
+        {
+            Mission m = missions[i];
+            if (m == null)
+            {
+                continue;
+            }
+
+            double rate = m.getSuccessRate();
+            total += rate;
+
+            if (rate > highest)
+            {
+                highest = rate;
+                highestMission = m;
+            }
+
+            if (rate < lowest)
+            {
+                lowest = rate;
+                lowestMission = m;
+            }
+        }
+
+        double average = total / missions.length;
+
+        System.out.println("Average Success Rate: " + Math.round(average * 100.0) / 100.0 + "%");
+
+        if (highestMission != null)
+        {
+            System.out.println("Highest Success Rate: " + highest + "% (" + highestMission.getMissionName() + ")");
+        }
+
+        if (lowestMission != null)
+        {
+            System.out.println("Lowest Success Rate: " + lowest + "% (" + lowestMission.getMissionName() + ")");
+        }
+    }
 }
 
 
