@@ -1,7 +1,9 @@
 import java.io.BufferedReader;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -712,6 +714,87 @@ public class MissionController
             System.out.println("No astronauts found with nationality: " + nationality);
         }
     }
+
+    // NAME: writeFile
+    // IMPORT: filename (String)
+    // EXPORT: none
+    // PURPOSE: Saves the current mission list to a CSV file
+    public void writeFile(String filename)
+    {
+        PrintWriter writer = null;
+
+        try
+        {
+            writer = new PrintWriter(new FileWriter(filename));
+
+            // Write header line
+            writer.println("Mission Name,Mission Code,Destination Planet,Launch Year,Success Rate,Manned Mission,Astronauts");
+
+            // Loop through all missions and write each one
+            for (int i = 0; i < missions.length; i++)
+            {
+                Mission m = missions[i];
+
+                if (m == null)
+                {
+                    continue;
+                }
+
+                String line = m.getMissionName() + "," +
+                            m.getMissionCode() + "," +
+                            m.getDestPlanet() + "," +
+                            m.getLaunchYear() + "," +
+                            m.getSuccessRate() + "," +
+                            m.isManned() + ",";
+
+                // For manned missions, write astronaut list
+                if (m.isManned() && m.getAstronauts() != null)
+                {
+                    Astronaut[] crew = m.getAstronauts();
+                    StringBuilder crewData = new StringBuilder();
+
+                    for (int j = 0; j < crew.length; j++)
+                    {
+                        Astronaut a = crew[j];
+                        if (a != null)
+                        {
+                            // Convert year of birth back into age
+                            int age = 2025 - a.getYearOfBirth();
+                            crewData.append(a.getFirstName()).append(" ").append(a.getLastName())
+                                    .append(":").append(a.getRole())
+                                    .append(":").append(age)
+                                    .append(":").append(a.getNationality());
+
+                            // Separate astronauts with |
+                            if (j < crew.length - 1 && crew[j + 1] != null)
+                            {
+                                crewData.append("|");
+                            }
+                        }
+                    }
+
+                    line += crewData.toString();
+                }
+
+                // For unmanned missions, leave astronauts field blank
+                writer.println(line);
+            }
+
+            System.out.println("Mission data saved to file successfully.");
+        }
+        catch (IOException e)
+        {
+            System.out.println("Error writing to file: " + e.getMessage());
+        }
+        finally
+        {
+            if (writer != null)
+            {
+                writer.close();
+            }
+        }
+    }
+
 }
 
 

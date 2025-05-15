@@ -1,0 +1,34 @@
+Functionality Checklist
+1. Reading and saving
+    - Loads mission data from data.csv when the program starts
+    - Writes updated data back to data.csv only if something was changed
+    - Output format matches the original CSV (including astronaut info)
+
+2. Viewing missions
+    - Shows all missions
+    - Can filter to show only manned or only unmanned missions
+    - Can view astronauts assigned to a specific mission
+
+3. Adding and editing
+    - User can add a new mission with all required details
+    - Up to 5 astronauts can be added to a manned mission
+    - Existing mission fields (e.g. name, code, destination, year, etc.) can be edited
+    - If a mission is changed to unmanned, astronauts are automatically removed
+
+4. Astronaut filtering
+    - User can search for astronauts by nationality
+    - Shows matching astronaut name, role, age, and what mission they belong to
+
+5. Summary/statistics
+    - Program can display the average success rate of all missions
+    - Also shows which mission had the highest and lowest success rate
+
+6. Input checking
+    - All inputs are validated (e.g. launch year range, success rate limits, empty strings)
+    - Handles invalid inputs (like typing letters instead of numbers) without crashing
+    - User is asked to re-enter values until valid input is given
+
+7. Menu and overall
+    - Main menu displays all options and loops until exit
+    - User can exit cleanly after saving
+    - Program structure follows what was taught (separate Main, Controller, Mission, Astronaut classes)

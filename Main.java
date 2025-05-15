@@ -33,7 +33,7 @@ public class Main
             System.out.println(" 6 > Edit an existing mission");
             System.out.println(" 7 > Summary of missions' success rates (average, highest, lowest)");
             System.out.println(" 8 > List astronauts for a given nationality");
-            System.out.println(" 9 > Exit Mission Command and Control");
+            System.out.println(" 9 > Save changes and exit Mission Command and Control");
             System.out.println("==============================================");
             System.out.print("Your choice: ");
 
@@ -185,10 +185,15 @@ public class Main
                         String nationality = sc.nextLine();
                         controller.viewAstronautsByNationality(nationality);
                         break;
+
+                    case 9:
+                        controller.writeFile("data.csv");
+                        System.out.println("Exiting Mission Command and Control...");
+                        break;
                     
 
                     default:
-                        // To handle invalid menu choices (oopsies)
+                        // To handle invalid menu choices
                         System.out.println("Invalid choice :( Try again.\n");
                 }
             } 
